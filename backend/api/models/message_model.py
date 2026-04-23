@@ -6,3 +6,5 @@ class Message(Document):
     recever: str
     class Settings:
         collection = "messages"
+
+# up

@@ -68,3 +68,5 @@ async def mark_masg_as_readed(mainuid: str = Query(...), otheruid: str = Query(.
             status_code=500,
             content={"message":"Internal server Error!"}
         )
+    
+# up

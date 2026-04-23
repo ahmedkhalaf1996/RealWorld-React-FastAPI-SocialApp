@@ -24,3 +24,4 @@ async def get_user_notification(userid: str):
         print(e)
         return JSONResponse(content={"message": "Internal server error"}, status_code=500)
  
+ # up

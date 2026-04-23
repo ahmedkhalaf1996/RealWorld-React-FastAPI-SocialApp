@@ -14,3 +14,5 @@ class UpdateUserInterface(BaseModel):
     name: str 
     bio:str 
     imageUrl:str
+
+# up

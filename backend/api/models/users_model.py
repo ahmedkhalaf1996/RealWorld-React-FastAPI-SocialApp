@@ -19,6 +19,7 @@ class User(Document):
         collection = "users"
         indexes = [[("name", pymongo.TEXT), ("email", pymongo.TEXT)]]
 
+# up
 
 
 

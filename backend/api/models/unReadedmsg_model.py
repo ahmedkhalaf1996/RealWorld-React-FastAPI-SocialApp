@@ -7,3 +7,5 @@ class UnReadedMsg(Document):
     isReaded: bool
     class Settings:
         collection = "unreadedmsg"
+
+# up

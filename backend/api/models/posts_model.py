@@ -18,6 +18,7 @@ class Post(Document):
             [("title", pymongo.TEXT), ("message", pymongo.TEXT)]
         ]   
 
+# up
 
 
 
