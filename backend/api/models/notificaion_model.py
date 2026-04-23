@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from beanie import Document
 
 class UserInSchema(BaseModel):
@@ -12,7 +12,7 @@ class Notification(Document):
     mainuid: str
     targetid: str
     isreded: bool = False
-    createdAt : datetime = Field(default_factory=datetime.utcnow)
+    createdAt : datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     user: UserInSchema
     class Settings:
