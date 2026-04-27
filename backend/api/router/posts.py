@@ -35,19 +35,6 @@ async def createPost(request: Request, data:CreateUpdatePostInterface):
 
 
 
-@PostRouter.post("/{id}/commentPost", dependencies=[Depends(JWTBearer())], status_code=status.HTTP_201_CREATED)
-async def comment(request: Request, data:CommentPostInterface, id:str):
-    try: 
-        UserId = decodeJWT(request.headers["authorization"].split(" ")[1])["user_id"]
-
-        return await PostService.CommentPostMethod(data,id, UserId)
-    except Exception as e:
-        print("ex", e)
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content={"error":"Unable to Add your Comment !."}
-        )
-
 
 # get users & posts by seardch
 @PostRouter.get("/search")
@@ -75,9 +62,12 @@ async def getPost(id:str):
 
 # get many post by pagenation & related to the user
 @PostRouter.get("", status_code=status.HTTP_200_OK)
-async def getPosts(*, page:Optional[str]= None, id:Optional[str ] = None):
+async def getPosts(*, page:Optional[str]= None, id:Optional[str ] = None, profileId:Optional[str] = None):
     try:
-        return await PostService.GetAllPosts(page, id)
+        result = await PostService.GetAllPosts(page, id, profileId)
+        if not result:
+            return {"data":[], "currentPage": 1, "numberOfPages": 0}
+        return result
     except:
      return JSONResponse(
             status_code=status.HTTP_404_NOT_FOUND,
