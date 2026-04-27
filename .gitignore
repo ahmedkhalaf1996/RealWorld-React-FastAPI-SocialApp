@@ -1,2 +1,5 @@
 /backend/api/env
 /backend/api/__pycache__
+
+/backend/realTimeChat/__pycache__
+/backend/realTimeChat/env
