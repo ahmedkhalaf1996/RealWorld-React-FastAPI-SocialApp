@@ -142,4 +142,17 @@ class UserService:
             return None
 
 
+    @staticmethod 
+    async def getUserFriendsgRPc(userid:str):
+        try:
+            user = await User.find_one({"_id": ObjectId(userid)})
+            follwing_ids = user.following
+            followers_ids = user.followers
+
+            following_and_followers = list(set(follwing_ids + followers_ids))
+            final_list = [str(id) for id in following_and_followers]
+            return final_list
+        except Exception as e:  
+            print("Error in getUserFriendsgRPc:", e)
+            return None
 # up

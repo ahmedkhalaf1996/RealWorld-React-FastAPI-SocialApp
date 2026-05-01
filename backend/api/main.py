@@ -1,3 +1,4 @@
+import asyncio
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -5,12 +6,18 @@ from contextlib import asynccontextmanager
 from DB.database import init_db
 from router.Routers import router
 from router.comment import CommentRouter
+from grpcservice.chatservice import ChatServer
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup event
     await init_db()
-    yield
+    chat_server = ChatServer()
+    asyncio.create_task(chat_server.start())
+
+    yield  
+
 
 app = FastAPI(lifespan=lifespan)
 

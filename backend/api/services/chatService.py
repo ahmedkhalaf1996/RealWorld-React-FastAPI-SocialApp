@@ -101,6 +101,25 @@ class ChatService:
             return {"error": str(e)}
 
 
+    @staticmethod
+    async def send_message_grpc(sender, recever, content):
+            try:        
+                msg_in = Message(
+                    content=content,
+                    sender=sender,
+                    recever=recever,
+                )
+
+                await msg_in.save()
+                new_msg = await Message.find_one({"_id": msg_in.id})
+                
+
+                # 
+                await ChatService.update_unread_messages(sender, recever)
+
+                return {"msg": new_msg}
+            except Exception as e:
+                print(e )
 
 
 
