@@ -4,3 +4,7 @@
 
 /backend/realTimeChat/__pycache__
 /backend/realTimeChat/env
+
+
+/backend/realTimeNotification/__pycache__
+/backend/realTimeNotification/env
