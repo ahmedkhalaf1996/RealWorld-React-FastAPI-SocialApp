@@ -1,7 +1,7 @@
 import json 
 from fastapi import Response
 from models.notificaion_model import Notification, UserInSchema
-
+from grpcclient.notify import send_notification_gRPC
 class NotifiationService:
     @staticmethod
     async def get_user_notification(userid):
@@ -51,8 +51,9 @@ class NotifiationService:
                 )
             )
 
-            # TODO Calling gRPC HERE
+            #  Calling gRPC HERE
             await notifcation.save()
+            send_notification_gRPC(notifcation)
             print("notifcation created successfully")
             return {"notification_id": str(notifcation.id)}
         except Exception as e:
