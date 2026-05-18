@@ -2,6 +2,7 @@
 from typing import Optional
 from bson import ObjectId
 from models.users_model import User
+from models.posts_model import Post
 from passlib.context import CryptContext
 from interfaces.userInterfaces import CraeteUser, LoginUser, UpdateUserInterface
 from auth.auth_handler import signJWT
@@ -51,9 +52,11 @@ class UserService:
     async def getUserByid(userid: str):
         try:
             user = await User.find_one({"_id": ObjectId(userid)})
-            # TODO posts
+            if not user: return None
 
-            return {"user":user, "posts":"posts"}
+            posts_count = await Post.find({"creator": userid}).count()
+
+            return {"user":user, "postsCount":posts_count}
         except:
             return None
         
@@ -107,27 +110,32 @@ class UserService:
     
     # Get some sug users for our user
     @staticmethod
-    async def GetSugUsers(id:str):
-        try:
-            AllSugUsers = []
-            MainUser = await User.find_one({"_id": ObjectId(id)})
+    async def GetSugUsers(id: str):
+        main_user = await User.find_one({"_id": ObjectId(id)})
+        if not main_user:
+            return {"users": []}
+        excluded = set(str(x) for x in main_user.following)
+        excluded.add(str(main_user.id))
+        suggested = set()
+        for follow_id in main_user.following:
+            user = await User.find_one({"_id": ObjectId(follow_id)})
+            if not user:
+                continue
+            for follower in user.followers:
+                if str(follower) not in excluded:
+                    suggested.add(str(follower))
 
-            if MainUser:
-                for FoIdes in MainUser.following:
-                    fuser = await User.find_one({"_id": ObjectId(FoIdes)})
-                    for i in fuser.followers:
-                        if not str(i) == str(MainUser.id):
-                            lastf = await User.find_one({"_id": ObjectId(i)})
-                            AllSugUsers.append(lastf)
-                    for uid in fuser.following:
-                        if not str(uid) == str(MainUser.id):
-                            lastg = await User.find_one({"_id": ObjectId(uid)})
-                            AllSugUsers.append(lastg)
-            return {"users": AllSugUsers}
+            for following in user.following:
+                if str(following) not in excluded:
+                    suggested.add(str(following))
 
-        except:
-            return None
-        
+        users = await User.find({
+            "_id": {
+                "$in": [ObjectId(uid) for uid in suggested]
+            }
+        }).to_list()
+
+        return {"users": users}
         # DeleteUser
 
 

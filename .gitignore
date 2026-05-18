@@ -8,3 +8,6 @@
 
 /backend/realTimeNotification/__pycache__
 /backend/realTimeNotification/env
+
+/frontend/build
+/frontend/node_modules
